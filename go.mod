@@ -47,3 +47,5 @@ require (
 replace github.com/ipfs/go-datastore => github.com/ipfs/go-datastore v0.4.5
 
 replace github.com/ipfs/go-ds-flatfs => github.com/ipfs/go-ds-flatfs v0.4.4
+
+replace github.com/ipfs/go-ipfs-blockstore => github.com/ipfs/go-ipfs-blockstore v1.0.4
