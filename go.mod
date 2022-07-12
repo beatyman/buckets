@@ -36,7 +36,7 @@ require (
 	github.com/spf13/viper v1.12.0
 	github.com/stretchr/testify v1.7.1
 	github.com/textileio/dcrypto v0.0.1
-	github.com/textileio/go-threads v1.1.6-0.20220406044848-cdd032536e1f
+	github.com/textileio/go-threads v1.1.6-0.20220409162902-a715c2402413
 	github.com/textileio/powergate/v2 v2.6.2
 	github.com/textileio/textile/v2 v2.6.18
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f

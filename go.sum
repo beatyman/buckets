@@ -2027,8 +2027,9 @@ github.com/textileio/go-libp2p-pubsub-rpc v0.0.5/go.mod h1:MlOMOz3KZxexobvUuFXT/
 github.com/textileio/go-log/v2 v2.1.3-gke-1 h1:7e3xSUXQB8hn4uUe5fp41kLThW1o9T65gSM7qjS323g=
 github.com/textileio/go-log/v2 v2.1.3-gke-1/go.mod h1:DwACkjFS3kjZZR/4Spx3aPfSsciyslwUe5bxV8CEU2w=
 github.com/textileio/go-metrics-opentelemetry v0.0.0-20210323190205-79a1865cff3a/go.mod h1:Id63Mc5UuRBHToFNy5bSxDU0E5CdZgv9/qukLKZbxr4=
-github.com/textileio/go-threads v1.1.6-0.20220406044848-cdd032536e1f h1:E6Cshg8EsNVluIB6Q6XjVSL0QRm2+w5e5K5Ze1vDIhE=
 github.com/textileio/go-threads v1.1.6-0.20220406044848-cdd032536e1f/go.mod h1:yPnVPdm8mpCq+fEDw5AamqZy4cQ+wE9wOCaDm3BVEmQ=
+github.com/textileio/go-threads v1.1.6-0.20220409162902-a715c2402413 h1:Aw8sTmDHQ4we8dN3WCuR3KnUFTIkk/Tn3LOPq/cqvEs=
+github.com/textileio/go-threads v1.1.6-0.20220409162902-a715c2402413/go.mod h1:yPnVPdm8mpCq+fEDw5AamqZy4cQ+wE9wOCaDm3BVEmQ=
 github.com/textileio/powergate/v2 v2.3.0/go.mod h1:2j2NL1oevaVdrI6MpKfHnfgUOy1D4L7eP3I+1czxDjw=
 github.com/textileio/powergate/v2 v2.6.2 h1:YITz8ONd/goz2Mfatgn02ZvO+ERyDarLWFUc2VNFcjg=
 github.com/textileio/powergate/v2 v2.6.2/go.mod h1:Veh/njGGU8iRYJ2stR+B4MAgdxSrVKyQYuE081YGo0w=
