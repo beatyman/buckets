@@ -135,7 +135,7 @@ func (b *Repo) GetPathMap(pth string) (local, remote cid.Cid, err error) {
 
 // getPathMap returns details about a local path by key.
 func (b *Repo) getPathMap(k ds.Key) (m pathMap, err error) {
-	v, err := b.ds.Get(context.Background(),k)
+	v, err := b.ds.Get(k)
 	if err != nil {
 		return
 	}
@@ -196,7 +196,7 @@ func (b *Repo) putPathMap(k ds.Key, pm pathMap) error {
 	if err := enc.Encode(pm); err != nil {
 		return err
 	}
-	return b.ds.Put(context.Background(),k, buf.Bytes())
+	return b.ds.Put(k, buf.Bytes())
 }
 
 // recursiveAddPath walks path and adds files to the dag service.
@@ -425,7 +425,7 @@ func (b *Repo) RemovePath(ctx context.Context, pth string) error {
 			return err
 		}
 	}
-	return b.ds.Delete(context.Background(),k)
+	return b.ds.Delete(k)
 }
 
 // Close closes the store and blocks service.

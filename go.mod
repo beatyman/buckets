@@ -11,7 +11,7 @@ require (
 	github.com/ipfs/go-blockservice v0.3.0
 	github.com/ipfs/go-cid v0.1.0
 	github.com/ipfs/go-datastore v0.5.0
-	github.com/ipfs/go-ds-flatfs v0.5.1
+	github.com/ipfs/go-ds-flatfs v0.4.5
 	github.com/ipfs/go-ipfs-blockstore v1.2.0
 	github.com/ipfs/go-ipfs-chunker v0.0.5
 	github.com/ipfs/go-ipfs-ds-help v1.1.0
@@ -43,3 +43,7 @@ require (
 	google.golang.org/grpc v1.39.0
 	google.golang.org/protobuf v1.27.1
 )
+
+replace github.com/ipfs/go-datastore => github.com/ipfs/go-datastore v0.4.5
+
+replace github.com/ipfs/go-ds-flatfs => github.com/ipfs/go-ds-flatfs v0.4.4
