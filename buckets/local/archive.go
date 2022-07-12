@@ -76,15 +76,7 @@ func (b *Bucket) DefaultArchiveConfig(ctx context.Context) (config ArchiveConfig
 func (b *Bucket) Addresses(ctx context.Context) (*powPb.AddressesResponse, error) {
 	b.Lock()
 	defer b.Unlock()
-	ctx, err := b.Context(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("getting context: %s", err)
-	}
-	ar, err := b.clients.Filecoin.Addresses(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("getting addresses: %s", err)
-	}
-	return ar, nil
+   return &powPb.AddressesResponse{},nil
 }
 
 func fromPbArchiveConfig(pbConfig *pb.ArchiveConfig) ArchiveConfig {

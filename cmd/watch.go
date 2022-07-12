@@ -3,8 +3,6 @@ package cmd
 import (
 	"context"
 	"time"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // WatchState is used to inform Watch callers about the connection state.

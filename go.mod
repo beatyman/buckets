@@ -1,3 +1,42 @@
 module github.com/beatyman/buckets
 
-go 1.17
+go 1.16
+
+require (
+	github.com/alecthomas/jsonschema v0.0.0-20220216202328-9eeeec9d044b
+	github.com/gogo/status v1.1.1
+	github.com/golang/protobuf v1.5.2
+	github.com/gosimple/slug v1.9.0
+	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
+	github.com/ipfs/go-blockservice v0.3.0
+	github.com/ipfs/go-cid v0.2.0
+	github.com/ipfs/go-datastore v0.5.1
+	github.com/ipfs/go-ds-flatfs v0.5.1
+	github.com/ipfs/go-ipfs-blockstore v1.2.0
+	github.com/ipfs/go-ipfs-chunker v0.0.5
+	github.com/ipfs/go-ipfs-ds-help v1.1.0
+	github.com/ipfs/go-ipfs-exchange-offline v0.2.0
+	github.com/ipfs/go-ipld-cbor v0.0.6
+	github.com/ipfs/go-ipld-format v0.4.0
+	github.com/ipfs/go-merkledag v0.6.0
+	github.com/ipfs/go-unixfs v0.4.0
+	github.com/ipfs/interface-go-ipfs-core v0.7.0
+	github.com/logrusorgru/aurora v2.0.3+incompatible
+	github.com/manifoldco/promptui v0.9.0
+	github.com/mitchellh/go-homedir v1.1.0
+	github.com/multiformats/go-multiaddr v0.6.0
+	github.com/multiformats/go-multibase v0.1.1
+	github.com/multiformats/go-multihash v0.2.0
+	github.com/radovskyb/watcher v1.0.7
+	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06
+	github.com/spf13/cobra v1.5.0
+	github.com/spf13/viper v1.12.0
+	github.com/stretchr/testify v1.7.1
+	github.com/textileio/dcrypto v0.0.1
+	github.com/textileio/go-threads v1.1.6-0.20220406044848-cdd032536e1f
+	github.com/textileio/powergate/v2 v2.6.2
+	github.com/textileio/textile/v2 v2.6.18
+	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
+	google.golang.org/grpc v1.47.0
+	google.golang.org/protobuf v1.28.0
+)

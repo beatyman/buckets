@@ -135,7 +135,7 @@ func (b *Repo) GetPathMap(pth string) (local, remote cid.Cid, err error) {
 
 // getPathMap returns details about a local path by key.
 func (b *Repo) getPathMap(k ds.Key) (m pathMap, err error) {
-	v, err := b.ds.Get(k)
+	v, err := b.ds.Get(context.Background(),k)
 	if err != nil {
 		return
 	}
@@ -196,7 +196,7 @@ func (b *Repo) putPathMap(k ds.Key, pm pathMap) error {
 	if err := enc.Encode(pm); err != nil {
 		return err
 	}
-	return b.ds.Put(k, buf.Bytes())
+	return b.ds.Put(context.Background(),k, buf.Bytes())
 }
 
 // recursiveAddPath walks path and adds files to the dag service.
@@ -275,7 +275,7 @@ func copyLinks(ctx context.Context, nd ipld.Node, from, to ipld.DAGService) erro
 		}
 		child, err := lnk.GetNode(ctx, from)
 		if err != nil {
-			if err == ipld.ErrNotFound {
+			if ipld.IsNotFound(err){
 				// not found means we didnt modify it, and it should
 				// already be in the target datastore
 				continue
@@ -421,11 +421,11 @@ func (b *Repo) RemovePath(ctx context.Context, pth string) error {
 		return err
 	}
 	if err := b.dag.Remove(ctx, pm.Local); err != nil {
-		if !errors.Is(err, ipld.ErrNotFound) {
+		if !ipld.IsNotFound(err) {
 			return err
 		}
 	}
-	return b.ds.Delete(k)
+	return b.ds.Delete(context.Background(),k)
 }
 
 // Close closes the store and blocks service.

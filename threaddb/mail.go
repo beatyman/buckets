@@ -3,8 +3,6 @@ package threaddb
 import (
 	"context"
 	"errors"
-	"strings"
-
 	"github.com/alecthomas/jsonschema"
 	"github.com/beatyman/buckets/api/common"
 	"github.com/beatyman/buckets/mail"
@@ -112,7 +110,7 @@ func (m *Mail) NewMailbox(ctx context.Context, opts ...Option) (thread.ID, error
 		db.WithNewManagedName(mail.ThreadName),
 		db.WithNewManagedCollections(inboxConfig, sentboxConfig),
 		db.WithNewManagedToken(args.Token))
-	if err != nil && strings.Contains(err.Error(), mdb.DuplicateErrMsg) {
+	if err != nil  {
 		return id, ErrMailboxExists
 	}
 	return id, err

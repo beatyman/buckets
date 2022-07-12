@@ -2,19 +2,14 @@ package cmd
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
-	"strings"
-	"time"
 	bc "github.com/beatyman/buckets/api/bucketsd/client"
 	uc "github.com/beatyman/buckets/api/usersd/client"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/viper"
 	tc "github.com/textileio/go-threads/api/client"
 	"github.com/textileio/go-threads/core/thread"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/keepalive"
+	"time"
 )
 
 var (

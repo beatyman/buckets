@@ -11,7 +11,6 @@ import (
 
 	"github.com/alecthomas/jsonschema"
 	"github.com/beatyman/buckets/buckets"
-	"github.com/ipfs/go-cid"
 	"github.com/ipfs/interface-go-ipfs-core/path"
 	"github.com/textileio/dcrypto"
 	dbc "github.com/textileio/go-threads/api/client"
