@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"errors"
+	"github.com/beatyman/buckets/util"
 	"io"
 	"io/ioutil"
 	"os"
