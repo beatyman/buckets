@@ -30,7 +30,7 @@ import (
 	"time"
 )
 
-var log = logging.Logger("core")
+var log = logging.Logger("buckets")
 
 type Textile struct {
 	tn                 tc.NetBoostrapper
@@ -50,16 +50,11 @@ type Config struct {
 	Debug     bool
 	buckLocks *nutil.SemaphorePool
 	// Addresses
-	AddrAPI          ma.Multiaddr
-	AddrAPIProxy     ma.Multiaddr
-	AddrMongoURI     string
-	AddrMongoName    string
-	AddrThreadsHost  ma.Multiaddr
-	AddrGatewayHost  ma.Multiaddr
-	AddrGatewayURL   string
-	AddrIPFSAPI      ma.Multiaddr
-	AddrBillingAPI   string
-	AddrPowergateAPI string
+	AddrAPI         ma.Multiaddr
+	AddrThreadsHost ma.Multiaddr
+	AddrGatewayHost ma.Multiaddr
+	AddrGatewayURL  string
+	AddrIPFSAPI     ma.Multiaddr
 	// Buckets
 	MaxBucketArchiveRepFactor int
 	MaxBucketArchiveSize      int64
@@ -77,11 +72,13 @@ func NewTextile(ctx context.Context, conf Config) (*Textile, error) {
 	// Configure clients
 	ipfsapi, err := httpapi.NewApi(conf.AddrIPFSAPI)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	// Don't allow using textile as a gateway to non-bucket files
 	ic, err := ipfsapi.WithOptions(caopts.Api.FetchBlocks(false))
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 
@@ -98,47 +95,56 @@ func NewTextile(ctx context.Context, conf Config) (*Textile, error) {
 	}
 	t.tn, err = tc.DefaultNetwork(netOptions...)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 
 	// Configure gRPC server
 	target, err := tutil.TCPAddrFromMultiAddr(conf.AddrAPI)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	// Start threads clients
 	t.th, err = threads.NewClient(target, grpc.WithInsecure(), grpc.WithPerRPCCredentials(common.Credentials{}))
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	t.thn, err = netclient.NewClient(target, grpc.WithInsecure(), grpc.WithPerRPCCredentials(common.Credentials{}))
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	t.bucks, err = tdb.NewBuckets(t.th)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	t.mail, err = tdb.NewMail(t.th)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 
 	// Configure gRPC services
 	t.ts, err = tutil.NewBadgerDatastore("./test1", "eventstore", false)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	ts, err := dbapi.NewService(t.ts, t.tn, dbapi.Config{
 		Debug: conf.Debug,
 	})
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	ns, err := netapi.NewService(t.tn, netapi.Config{
 		Debug: conf.Debug,
 	})
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 
@@ -150,12 +156,13 @@ func NewTextile(ctx context.Context, conf Config) (*Textile, error) {
 		MaxBucketArchiveSize:      conf.MaxBucketArchiveSize,
 		MinBucketArchiveSize:      conf.MinBucketArchiveSize,
 	}
-
+	log.Info("=======================================")
 	// Start serving
 	var grpcopts []grpc.ServerOption
 	t.server = grpc.NewServer(grpcopts...)
 	listener, err := net.Listen("tcp", target)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	go func() {
@@ -209,8 +216,22 @@ func (t *Textile) Close() error {
 	}
 	return nil
 }
+
+// AddrFromStr returns a multiaddress from the string.
+func AddrFromStr(str string) ma.Multiaddr {
+	addr, err := ma.NewMultiaddr(str)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return addr
+}
+
 func main() {
-	ccCore, err := NewTextile(context.Background(), Config{})
+	ccCore, err := NewTextile(context.Background(), Config{
+		AddrIPFSAPI:     ma.StringCast("/ip4/127.0.0.1/tcp/5001"),
+		AddrThreadsHost: ma.StringCast("/ip4/127.0.0.1/tcp/4000"),
+		AddrAPI:         ma.StringCast("/ip4/0.0.0.0/tcp/7006"),
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
