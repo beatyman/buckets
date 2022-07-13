@@ -18,6 +18,7 @@ import (
 	dbpb "github.com/textileio/go-threads/api/pb"
 	"github.com/textileio/go-threads/broadcast"
 	tc "github.com/textileio/go-threads/common"
+	"github.com/textileio/go-threads/core/thread"
 	kt "github.com/textileio/go-threads/db/keytransform"
 	netapi "github.com/textileio/go-threads/net/api"
 	netclient "github.com/textileio/go-threads/net/api/client"
@@ -112,6 +113,8 @@ func NewTextile(ctx context.Context, conf Config) (*Textile, error) {
 		log.Error(err)
 		return nil, err
 	}
+
+
 	t.thn, err = netclient.NewClient(target, grpc.WithInsecure(), grpc.WithPerRPCCredentials(common.Credentials{}))
 	if err != nil {
 		log.Error(err)
@@ -216,7 +219,16 @@ func (t *Textile) Close() error {
 	}
 	return nil
 }
-
+func (t *Textile)CreateDB(){
+	threadID ,_:= thread.Decode("bafk5otulz5hsgszgtpfe7qmpuxqqz4wht4zrhtzj25sguf3fqgrjsni")
+	if _,err:=t.th.GetDBInfo(context.Background(),threadID);err==nil {
+		return
+	}
+	err:=t.th.NewDB(context.Background(),threadID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 // AddrFromStr returns a multiaddress from the string.
 func AddrFromStr(str string) ma.Multiaddr {
 	addr, err := ma.NewMultiaddr(str)
@@ -242,5 +254,9 @@ func main() {
 		log.Fatal(err)
 	}
 	ccCore.Bootstrap()
+
+	time.Sleep(time.Second*5)
+	ccCore.CreateDB()
+	log.Info("db created")
 	select {}
 }

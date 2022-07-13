@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	logging "github.com/ipfs/go-log/v2"
 	gopath "path"
 	"strings"
 	"sync"
@@ -26,6 +27,8 @@ var (
 		Path: "path",
 	}}
 	bucketsConfig db.CollectionConfig
+
+	log = logging.Logger("db")
 )
 
 // Bucket represents the buckets threaddb collection schema.
@@ -497,7 +500,46 @@ func (b *Buckets) New(
 	owner thread.PubKey,
 	metadata map[string]Metadata, opts ...BucketOption,
 ) (*Bucket, error) {
-	bucket := &Bucket{}
+	args := &BucketOptions{}
+	for _, opt := range opts {
+		opt(args)
+	}
+	var encKey string
+	if args.Key != nil {
+		encKey = base64.StdEncoding.EncodeToString(args.Key)
+	}
+	if args.Token.Defined() {
+		tokenOwner, err := args.Token.PubKey()
+		if err != nil {
+			return nil, err
+		}
+		if tokenOwner != nil && owner.String() != tokenOwner.String() {
+			return nil, fmt.Errorf("creating bucket: token owner mismatch")
+		}
+	}
+	if metadata == nil {
+		metadata = make(map[string]Metadata)
+	}
+	bucket := &Bucket{
+		Key:       key,
+		Name:      args.Name,
+		Version:   Version,
+		LinkKey:   encKey,
+		Path:      pth.String(),
+		Metadata:  metadata,
+		Archives:  Archives{Current: Archive{Deals: []Deal{}}, History: []Archive{}},
+		CreatedAt: now.UnixNano(),
+		UpdatedAt: now.UnixNano(),
+	}
+	if owner != nil {
+		bucket.Owner = owner.String()
+	}
+	if _, err := b.Create(ctx, dbID, bucket, WithToken(args.Token)); err != nil {
+		return nil, fmt.Errorf("creating bucket in thread: %s", err)
+	}
+	if err := b.Get(ctx, dbID, key, &bucket, WithToken(args.Token)); err != nil {
+		return nil, fmt.Errorf("getting bucket in thread: %s", err)
+	}
 	return bucket, nil
 }
 

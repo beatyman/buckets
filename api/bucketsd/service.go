@@ -583,7 +583,12 @@ func (s *Service) encryptFileNode(ctx context.Context, n ipld.Node, currentKey, 
 func (s Service) Create(ctx context.Context, request *pb.CreateRequest) (*pb.CreateResponse, error) {
 	log.Debugf("received create request")
 
+	threadID ,_:= thread.Decode("bafk5otulz5hsgszgtpfe7qmpuxqqz4wht4zrhtzj25sguf3fqgrjsni")
+	//threadID := thread.NewIDV1(thread.Raw, 32)
+	ctx = common.NewThreadIDContext(ctx, threadID)
+
 	dbID, ok := common.ThreadIDFromContext(ctx)
+	log.Info(dbID,"============================", ctx.Value(ctxKey("threadID")))
 	if !ok {
 		return nil, errDBRequired
 	}
@@ -601,6 +606,7 @@ func (s Service) Create(ctx context.Context, request *pb.CreateRequest) (*pb.Cre
 	// If not created with --unfreeze, just do the normal case.
 	ctx, buck, seed, err := s.createBucket(ctx, dbID, dbToken, request.Name, request.Private, bootCid)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	var seedData []byte
@@ -619,8 +625,10 @@ func (s Service) Create(ctx context.Context, request *pb.CreateRequest) (*pb.Cre
 
 	root, err := getPbRoot(dbID, buck)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
+	log.Info("==========================")
 	return &pb.CreateResponse{
 		Root:    root,
 		Seed:    seedData,
