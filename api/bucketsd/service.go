@@ -718,7 +718,29 @@ func (s *Service) createBucket(
 }
 
 func (s Service) Root(ctx context.Context, request *pb.RootRequest) (*pb.RootResponse, error) {
-	panic("implement me")
+	log.Debugf("received root request")
+	threadID ,_:= thread.Decode("bafk5otulz5hsgszgtpfe7qmpuxqqz4wht4zrhtzj25sguf3fqgrjsni")
+	//threadID := thread.NewIDV1(thread.Raw, 32)
+	ctx = common.NewThreadIDContext(ctx, threadID)
+	dbID, ok := common.ThreadIDFromContext(ctx)
+	if !ok {
+		return nil, errDBRequired
+	}
+	dbToken, _ := thread.TokenFromContext(ctx)
+
+	buck := &tdb.Bucket{}
+	err := s.Buckets.GetSafe(ctx, dbID, request.Key, buck, tdb.WithToken(dbToken))
+	if err != nil {
+		return nil, err
+	}
+	log.Infof("%+v",buck)
+	root, err := getPbRoot(dbID, buck)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.RootResponse{
+		Root: root,
+	}, nil
 }
 
 func (s Service) Links(ctx context.Context, request *pb.LinksRequest) (*pb.LinksResponse, error) {

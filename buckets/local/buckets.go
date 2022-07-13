@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/beatyman/buckets/util"
+	logging "github.com/ipfs/go-log/v2"
 	"os"
 	"path/filepath"
 
@@ -15,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/textileio/go-threads/core/thread"
 )
-
+var log = logging.Logger("db")
 var (
 	// ErrNotABucket indicates the given path is not within a bucket.
 	ErrNotABucket = errors.New("not a bucket (or any of the parent directories): .textile")
@@ -281,10 +282,12 @@ func (b *Buckets) repoName() string {
 func (b *Buckets) GetLocalBucket(ctx context.Context, conf Config) (*Bucket, error) {
 	cwd, err := filepath.Abs(conf.Path)
 	if err != nil {
+		log.Infof("%+v",err)
 		return nil, err
 	}
 	bc, found, err := b.config.NewConfig(cwd, flags, false)
 	if err != nil {
+		log.Infof("%+v",err)
 		return nil, err
 	}
 	if conf.Thread.Defined() {
@@ -307,9 +310,11 @@ func (b *Buckets) GetLocalBucket(ctx context.Context, conf Config) (*Bucket, err
 	if found {
 		bp, err := buck.Path()
 		if err != nil {
+			log.Infof("%+v",err)
 			return nil, err
 		}
-		if err = buck.loadLocalRepo(ctx, bp, b.repoName(), true); err != nil {
+		if err = buck.loadLocalRepo(ctx, bp, b.repoName(), false); err != nil {
+			log.Infof("%+v",err)
 			return nil, err
 		}
 	}

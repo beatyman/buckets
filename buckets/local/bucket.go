@@ -463,10 +463,14 @@ func (b *Bucket) getRemoteRoot(ctx context.Context) (cid.Cid, error) {
 	if err != nil {
 		return cid.Undef, err
 	}
+	threadID ,_:= thread.Decode("bafk5otulz5hsgszgtpfe7qmpuxqqz4wht4zrhtzj25sguf3fqgrjsni")
+	//threadID := thread.NewIDV1(thread.Raw, 32)
+	ctx = common.NewThreadIDContext(ctx, threadID)
 	rr, err := b.clients.Buckets.Root(ctx, b.Key())
 	if err != nil {
 		return cid.Undef, err
 	}
+	log.Info("============",rr.Root.Path)
 	rp, err := util.NewResolvedPath(rr.Root.Path)
 	if err != nil {
 		return cid.Undef, err

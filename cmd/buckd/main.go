@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/beatyman/buckets/api/bucketsd"
 	bpb "github.com/beatyman/buckets/api/bucketsd/pb"
 	"github.com/beatyman/buckets/api/common"
@@ -221,12 +222,17 @@ func (t *Textile) Close() error {
 }
 func (t *Textile)CreateDB(){
 	threadID ,_:= thread.Decode("bafk5otulz5hsgszgtpfe7qmpuxqqz4wht4zrhtzj25sguf3fqgrjsni")
-	if _,err:=t.th.GetDBInfo(context.Background(),threadID);err==nil {
+	if info,err:=t.th.GetDBInfo(context.Background(),threadID);err==nil {
+		fmt.Println(info.Key)
 		return
 	}
 	err:=t.th.NewDB(context.Background(),threadID)
 	if err != nil {
 		log.Fatal(err)
+	}
+	if info,err:=t.th.GetDBInfo(context.Background(),threadID);err==nil {
+		fmt.Println(info.Key)
+		return
 	}
 }
 // AddrFromStr returns a multiaddress from the string.
@@ -258,5 +264,6 @@ func main() {
 	time.Sleep(time.Second*5)
 	ccCore.CreateDB()
 	log.Info("db created")
+
 	select {}
 }

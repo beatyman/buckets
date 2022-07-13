@@ -55,6 +55,7 @@ func MustParseAddr(str string) ma.Multiaddr {
 func NewResolvedPath(s string) (path.Resolved, error) {
 	parts := strings.SplitN(s, "/", 3)
 	if len(parts) != 3 {
+		panic(s)
 		return nil, fmt.Errorf("path is not resolvable")
 	}
 	c, err := cid.Decode(parts[2])

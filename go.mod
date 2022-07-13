@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/alecthomas/jsonschema v0.0.0-20191017121752-4bb6e3fae4f2
+	github.com/cheggaaa/pb/v3 v3.0.5
 	github.com/gogo/status v1.1.0
 	github.com/golang/protobuf v1.5.2
 	github.com/gosimple/slug v1.9.0

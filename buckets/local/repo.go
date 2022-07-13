@@ -275,7 +275,7 @@ func copyLinks(ctx context.Context, nd ipld.Node, from, to ipld.DAGService) erro
 		}
 		child, err := lnk.GetNode(ctx, from)
 		if err != nil {
-			if ipld.IsNotFound(err){
+			if err == ipld.ErrNotFound {
 				// not found means we didnt modify it, and it should
 				// already be in the target datastore
 				continue
@@ -421,7 +421,7 @@ func (b *Repo) RemovePath(ctx context.Context, pth string) error {
 		return err
 	}
 	if err := b.dag.Remove(ctx, pm.Local); err != nil {
-		if !ipld.IsNotFound(err) {
+		if !errors.Is(err, ipld.ErrNotFound) {
 			return err
 		}
 	}

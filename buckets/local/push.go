@@ -3,6 +3,9 @@ package local
 import (
 	"context"
 	"errors"
+	"fmt"
+	"github.com/beatyman/buckets/api/common"
+	"github.com/textileio/go-threads/core/thread"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,6 +21,9 @@ func (b *Bucket) PushLocal(ctx context.Context, opts ...PathOption) (roots Roots
 	b.Lock()
 	defer b.Unlock()
 	ctx, err = b.Context(ctx)
+	threadID ,_:= thread.Decode("bafk5otulz5hsgszgtpfe7qmpuxqqz4wht4zrhtzj25sguf3fqgrjsni")
+	//threadID := thread.NewIDV1(thread.Raw, 32)
+	ctx = common.NewThreadIDContext(ctx, threadID)
 	if err != nil {
 		return
 	}
@@ -85,6 +91,7 @@ func (b *Bucket) PushLocal(ctx context.Context, opts ...PathOption) (roots Roots
 			rm = append(rm, c)
 		}
 	}
+	fmt.Println("aaaaaaaaaaaaaaaaa")
 	xr, err = b.AddRemoteFiles(ctx, key, xr, add, args.force, args.events)
 	if err != nil {
 		return roots, err
@@ -98,7 +105,7 @@ func (b *Bucket) PushLocal(ctx context.Context, opts ...PathOption) (roots Roots
 			}
 		}
 	}
-
+	fmt.Println("bbbbbbbbbbbbbbbb")
 	if b.repo != nil {
 		if err := b.repo.Save(ctx); err != nil {
 			return roots, err
