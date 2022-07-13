@@ -30,7 +30,7 @@ import (
 	"time"
 )
 
-var log = logging.Logger("buckets")
+var log = logging.Logger("db")
 
 type Textile struct {
 	tn                 tc.NetBoostrapper
@@ -65,6 +65,7 @@ type Config struct {
 }
 
 func NewTextile(ctx context.Context, conf Config) (*Textile, error) {
+	logging.SetAllLoggers(logging.LevelError)
 	t := &Textile{
 		conf:               conf,
 		internalHubSession: util.MakeToken(32),
@@ -156,7 +157,6 @@ func NewTextile(ctx context.Context, conf Config) (*Textile, error) {
 		MaxBucketArchiveSize:      conf.MaxBucketArchiveSize,
 		MinBucketArchiveSize:      conf.MinBucketArchiveSize,
 	}
-	log.Info("=======================================")
 	// Start serving
 	var grpcopts []grpc.ServerOption
 	t.server = grpc.NewServer(grpcopts...)
@@ -181,7 +181,7 @@ func NewTextile(ctx context.Context, conf Config) (*Textile, error) {
 			log.Fatalf("error closing thread service: %v", err)
 		}
 	}()
-
+	log.Info("---------------------------------------")
 	return t, nil
 }
 
@@ -227,6 +227,12 @@ func AddrFromStr(str string) ma.Multiaddr {
 }
 
 func main() {
+	c := logging.Config{
+		Format: logging.ColorizedOutput,
+		Stderr: true,
+		Level:  logging.LevelError,
+	}
+	logging.SetupLogging(c)
 	ccCore, err := NewTextile(context.Background(), Config{
 		AddrIPFSAPI:     ma.StringCast("/ip4/127.0.0.1/tcp/5001"),
 		AddrThreadsHost: ma.StringCast("/ip4/127.0.0.1/tcp/4000"),
